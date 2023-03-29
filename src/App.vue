@@ -5,7 +5,7 @@
     >
       <mdicon name="menu" />
       <a
-        class="text-sm font-medium leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
+        class="text-md font-medium leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
       >
         FakeStore
       </a>
