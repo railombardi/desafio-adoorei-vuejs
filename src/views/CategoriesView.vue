@@ -1,9 +1,12 @@
 <template>
-  <div class="home">
+  <div :key="category" class="categories">
+    <div class="flex justify-center mb-5 font-medium text-xl">
+      {{ $route.params.category }}
+    </div>
     <div class="flex justify-center mb-5">
       <InputSearch
         v-model="search"
-        placeholder="Search all products..."
+        placeholder="Search category products..."
         class="max-w-[400px] px-2"
       />
     </div>
@@ -12,15 +15,12 @@
         v-for="product in filteredProducts"
         :key="product.name"
         :product="product"
-        class="cursor-pointer"
       />
     </div>
   </div>
 </template>
-
 <script>
 export default {
-  name: "HomeView",
   components: {
     ProductsCard: () => import("@components/ProductsCard.vue"),
     InputSearch: () => import("@components/InputSearch.vue"),
@@ -30,6 +30,9 @@ export default {
     search: "",
   }),
   computed: {
+    category() {
+      return this.$route.params.category;
+    },
     filteredProducts() {
       let filteredProducts = this.products.slice();
       if (this.search) {
@@ -40,12 +43,24 @@ export default {
       return filteredProducts;
     },
   },
-  async created() {
-    await this.$axios
-      .get("https://fakestoreapi.com/products")
-      .then((response) => {
-        this.products = response.data;
-      });
+  watch: {
+    category: {
+      immediate: true,
+      handler() {
+        this.getProducts();
+      },
+    },
+  },
+  methods: {
+    async getProducts() {
+      await this.$axios
+        .get(`https://fakestoreapi.com/products/category/${this.category}`)
+        .then((response) => {
+          this.products = response.data;
+        });
+    },
   },
 };
 </script>
+
+<style></style>

@@ -7,24 +7,43 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
+    redirect: "/home",
+  },
+  {
+    path: "/home",
     name: "home",
     component: HomeView,
+    meta: {
+      title: "Welcome to the FakeStore",
+    },
   },
-  // {
-  //   path: "/about",
-  //   name: "about",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  // },
+  {
+    path: "/categories/:category",
+    name: "categories",
+    props: true,
+    component: () => import("../views/CategoriesView.vue"),
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const title = to.meta.title;
+
+  const titleCategory = to.params.category;
+
+  if (title) {
+    document.title = title;
+  }
+  if (titleCategory) {
+    document.title = "Categories -> " + titleCategory;
+  }
+  // Continue resolving the route
+  next();
 });
 
 export default router;
